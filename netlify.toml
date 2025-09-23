@@ -1,0 +1,45 @@
+[build]
+  # Diretório onde estão os arquivos de build
+  publish = "dist"
+  
+  # Comando para fazer o build
+  command = "npm run build"
+  
+  # Versão do Node.js
+  environment = { NODE_VERSION = "22" }
+
+[build.environment]
+  # Configurações de ambiente para o build
+  NODE_ENV = "production"
+
+# Configurações para Netlify Functions (API)
+[functions]
+  directory = "netlify/functions"
+
+# Redirecionamentos para SPA (Single Page Application)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Redirecionamento específico para API
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+# Headers de segurança
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://generativelanguage.googleapis.com;"
+
+# Headers específicos para arquivos estáticos
+[[headers]]
+  for = "/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
