@@ -83,3 +83,5 @@ Desktop.ini
 # Temporary folders
 tmp/
 temp/
+
+.vercel

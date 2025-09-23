@@ -4,6 +4,9 @@
   "description": "An AI-powered chat assistant for the 'agencia OCA' digital marketing agency.",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
     "dev": "vite",
     "dev:server": "node server.js",
