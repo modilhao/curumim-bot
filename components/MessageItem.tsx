@@ -8,10 +8,15 @@ interface MessageItemProps {
 }
 
 const renderFormattedText = (text: string) => {
-  // Replace markdown-style bold with <strong> tags
-  const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  const formattedText = text
+    // Replace markdown-style bold with <strong> tags containing a Tailwind class for styling
+    .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold">$1</strong>')
+    // Replace markdown-style bullet points (* or -) with HTML bullet entities
+    // Handles bullets at the start of the string or after a newline
+    .replace(/^(\s*)[*-]\s/gm, '$1&bull; ');
   return { __html: formattedText };
 };
+
 
 const MessageItem: React.FC<MessageItemProps> = ({ message, isLastMessage, onQuickReplyClick }) => {
   const isUser = message.role === Role.USER;
@@ -28,6 +33,11 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, isLastMessage, onQui
         </div>
       </div>
     );
+  }
+
+  // Do not render empty messages from the model
+  if (message.role === Role.MODEL && !message.content?.trim() && !message.quickReplies) {
+    return null;
   }
 
   const messageClass = isUser

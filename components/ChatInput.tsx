@@ -1,18 +1,13 @@
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, forwardRef } from 'react';
 
 interface ChatInputProps {
   onSendMessage: (text: string) => void;
   isLoading: boolean;
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, isLoading }) => {
+const ChatInput = forwardRef<HTMLInputElement, ChatInputProps>(({ onSendMessage, isLoading }, ref) => {
   const [text, setText] = useState('');
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, [isLoading]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +21,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, isLoading }) => {
     <div className="p-4 bg-white border-t border-gray-200">
       <form onSubmit={handleSubmit} className="flex items-center space-x-3">
         <input
-          ref={inputRef}
+          ref={ref}
           type="text"
           value={text}
           onChange={(e) => setText(e.target.value)}
@@ -47,7 +42,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, isLoading }) => {
         </button>
       </form>
     </div>
-  ); 
-};
+  );
+});
 
 export default ChatInput;

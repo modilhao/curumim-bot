@@ -37,25 +37,8 @@ export async function streamChatResponse(
     });
 
     if (!response.ok) {
-      let errorMessage = 'API request failed';
-      let userMessage = 'Desculpe, ocorreu um erro. Por favor, tente novamente.';
-      
-      try {
-        const errorData = await response.json();
-        errorMessage = errorData.error || errorData.details || errorMessage;
-        // Se o servidor enviou uma mensagem amigável para o usuário, use ela
-        if (errorData.userMessage) {
-          userMessage = errorData.userMessage;
-        }
-      } catch (jsonError) {
-        // Se não conseguir fazer parse do JSON, usa o status text
-        errorMessage = `HTTP ${response.status}: ${response.statusText}`;
-      }
-      
-      // Criar um erro customizado que inclui a mensagem amigável
-      const customError = new Error(errorMessage) as Error & { userMessage?: string };
-      customError.userMessage = userMessage;
-      throw customError;
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'API request failed');
     }
 
     if (!response.body) {
